@@ -20,6 +20,8 @@ public class ShootCannon : MonoBehaviour
     private Vector2 m_startDragPos = Vector3.zero;
     private Vector2 m_currentMousePos = Vector3.zero;
 
+    private Projectile m_preparedProjectile = null;
+
     private void Awake()
     {
         m_camera = Camera.main;
@@ -68,6 +70,7 @@ public class ShootCannon : MonoBehaviour
         m_cannonData.CurrentPower = 0;
         m_cannonData.IsAiming = false;
         m_spriteRenderer.color = Color.white;
+        m_preparedProjectile = null;
     }
 
     private void OnDrag()
@@ -76,6 +79,12 @@ public class ShootCannon : MonoBehaviour
 
         if (m_cannonData.IsAiming)
         {
+            if (m_preparedProjectile == null)
+            {
+                m_preparedProjectile = Instantiate(m_cannonData.ProjectileToSpawn, m_projectileSocket);
+                m_preparedProjectile.Rigidbody.isKinematic = true;
+            }
+            
             m_cannonData.CurrentAimDir = -(m_currentMousePos - (Vector2)m_transform.position);
             m_cannonData.CurrentAimDir.Normalize();
             
@@ -86,6 +95,7 @@ public class ShootCannon : MonoBehaviour
 
     private void PrepareShot()
     {
+        DrawTrajectory(m_preparedProjectile);
         Vector2 cannonPos = m_transform.position;
         Vector2 dirToMousePos = m_currentMousePos - cannonPos;
 
@@ -98,11 +108,12 @@ public class ShootCannon : MonoBehaviour
 
     private void Fire()
     {
-        if(m_cannonData.ProjectileToSpawn == null)
+        if(m_preparedProjectile == null)
             return;
-        
-        Projectile spawnedProjectile = Instantiate(m_cannonData.ProjectileToSpawn, m_projectileSocket.position, m_transform.rotation);
-        spawnedProjectile.StartFire(m_cannonData);
+
+        m_preparedProjectile.Rigidbody.isKinematic = false;
+        m_preparedProjectile.Transform.SetParent(null);
+        m_preparedProjectile.Shoot(m_cannonData);
     }
     
     private void RotateInAimDir()
@@ -119,5 +130,26 @@ public class ShootCannon : MonoBehaviour
         Vector2 dirToPoint = point - (Vector2)m_transform.position;
 
         return Vector2.Dot(dirToPoint, Vector2.up) < 0;
+    }
+    
+    private void DrawTrajectory(Projectile projectile)
+    {
+        if(projectile == null)
+            return;
+        
+        float travelSpeed = projectile.Data.BaseTravelSpeed * m_cannonData.CurrentPower;
+        
+        List<Vector2> points = projectile.GetTrajectory(projectile.Transform.position, m_transform.up * travelSpeed, 1000);
+        
+        for(int i = 0; i < points.Count; i++)
+        {
+            if (i < points.Count - 1)
+            {
+                Vector2 currentPoint = points[i];
+                Vector2 nextPoint = points[i + 1];
+                
+                Debug.DrawLine(currentPoint, nextPoint, Color.cyan);
+            }
+        }
     }
 }
