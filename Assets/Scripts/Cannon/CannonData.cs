@@ -13,9 +13,9 @@ public class CannonData : ScriptableObject
 
     [Header("Shooting")] 
     [SerializeField] 
-    private Projectile m_projectileToSpawn = null;
+    private ProjectileData m_projectileToSpawn = null;
 
-    public Projectile ProjectileToSpawn => m_projectileToSpawn;
+    public ProjectileData ProjectileToSpawn => m_projectileToSpawn;
     
     [SerializeField] 
     private float m_maxPullDist = 2;

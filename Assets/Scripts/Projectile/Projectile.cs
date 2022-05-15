@@ -109,4 +109,9 @@ public class Projectile : MonoBehaviour
         
         return hit.collider != null;
     }
+
+    public void Destroy()
+    {
+        Destroy(gameObject);
+    }
 }
