@@ -23,6 +23,7 @@ public class Projectile : MonoBehaviour
     public Transform Transform => m_transform;
 
     private Vector2 m_velocityLastFrame = Vector2.zero;
+    public Vector2 VelocityLastFrame => m_velocityLastFrame;
 
     private void Awake()
     {

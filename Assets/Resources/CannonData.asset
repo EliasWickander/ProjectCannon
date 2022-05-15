@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CannonData
   m_EditorClassIdentifier: 
   m_dragDeadZone: 0.2
-  m_projectileToSpawn: {fileID: 7818917033845791799, guid: 6039be680d947c84a9522eeb93b1b809, type: 3}
+  m_projectileToSpawn: {fileID: 11400000, guid: cc7065dc7432d8a4e857e8526745a615, type: 2}
   m_maxPullDist: 2
   m_minPower: 1
   m_maxPower: 3
