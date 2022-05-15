@@ -1,4 +1,6 @@
-﻿public class CannonState_Fire : CannonState
+﻿using UnityEngine;
+
+public class CannonState_Fire : CannonState
 {
     public CannonState_Fire(Cannon controller) : base(controller)
     {
@@ -26,7 +28,7 @@
     private void Fire()
     {
         Projectile preparedProjectile = m_controller.PreparedProjectile;
-        
+
         if(preparedProjectile == null)
             return;
 

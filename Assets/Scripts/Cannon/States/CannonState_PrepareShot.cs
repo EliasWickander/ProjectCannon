@@ -15,6 +15,16 @@ public class CannonState_PrepareShot : CannonState
 
     public override void Update()
     {
+        //When player lets go of mouse button, fire projectile
+        if (Input.GetMouseButtonUp(0))
+        {
+            if (m_controller.PreparedProjectile != null)
+            {
+                TransitionToState(CannonStateEnum.Fire);
+                return;   
+            }
+        }
+        
         //If player either stopped dragging or went above cannon with mouse, transition to idle
         if (!m_controller.IsDragging || !m_controller.IsPointBehindCannon(m_controller.CurrentMousePos))
         {
@@ -29,16 +39,6 @@ public class CannonState_PrepareShot : CannonState
             return;
         }
 
-        //When player lets go of mouse button, fire projectile
-        if (Input.GetMouseButtonUp(0))
-        {
-            if (m_controller.PreparedProjectile != null)
-            {
-                TransitionToState(CannonStateEnum.Fire);
-                return;   
-            }
-        }
-            
         //Calculate aim direction
         m_data.CurrentAimDir = -(m_controller.CurrentMousePos - (Vector2)m_transform.position);
         m_data.CurrentAimDir.Normalize();
